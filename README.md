@@ -16,8 +16,8 @@ A sleek, dark-mode first portfolio website built for Om Das using Next.js (App R
 This project requires a Supabase backend to store links, projects, and messages.
 
 ### 1. Supabase Project Setup
-1. Go to [Supabase](https://supabase.com/) and create a new project.
-2. Once the project is ready, go to **Project Settings -> API** to get your `Project URL` and `anon public` key.
+1. Go to your specific Supabase project dashboard: [https://supabase.com/dashboard/project/tqktoasbgedqtmxooxlc](https://supabase.com/dashboard/project/tqktoasbgedqtmxooxlc)
+2. Go to **Project Settings -> API** to get your `Project URL` and `anon public` key.
 3. Go to the **SQL Editor** in your Supabase dashboard and run the entire SQL script located in `supabase/migrations/20240101000000_init_schema.sql`. This will create the required tables (`links`, `projects`, `messages`) and set up Row Level Security (RLS) policies.
 4. Go to **Authentication -> Providers** and make sure Email/Password is enabled. 
 5. Go to **Authentication -> Users** and manually create your Admin user (e.g., `omdasg11@gmail.com`). This is the *only* account that will be able to log into the `/admin` dashboard.
