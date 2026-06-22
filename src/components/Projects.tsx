@@ -1,4 +1,5 @@
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 
 export type Project = {
@@ -62,7 +63,7 @@ export function Projects({ projects }: { projects: Project[] }) {
                 )}
                 {project.repo_url && (
                   <Link href={project.repo_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium border border-border px-4 py-2 rounded-md hover:bg-muted transition-colors">
-                    <Github size={16} />
+                    <FaGithub size={16} />
                     <span>Source</span>
                   </Link>
                 )}

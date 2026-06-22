@@ -1,4 +1,5 @@
-import { Github, Linkedin, Twitter, Mail, Instagram, MessageCircle, Link as LinkIcon } from "lucide-react";
+import { Mail, Link as LinkIcon } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 
 export type SocialLink = {
@@ -12,12 +13,12 @@ export type SocialLink = {
 };
 
 const iconMap: Record<string, React.ReactNode> = {
-  github: <Github size={20} />,
-  linkedin: <Linkedin size={20} />,
-  twitter: <Twitter size={20} />,
+  github: <FaGithub size={20} />,
+  linkedin: <FaLinkedin size={20} />,
+  twitter: <FaTwitter size={20} />,
   mail: <Mail size={20} />,
-  instagram: <Instagram size={20} />,
-  whatsapp: <MessageCircle size={20} />,
+  instagram: <FaInstagram size={20} />,
+  whatsapp: <FaWhatsapp size={20} />,
 };
 
 function getIcon(iconName: string | null) {
