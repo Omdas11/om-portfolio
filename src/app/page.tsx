@@ -1,65 +1,75 @@
-import Image from "next/image";
+import { Hero } from "@/components/Hero";
+import { About } from "@/components/About";
+import { Projects, Project } from "@/components/Projects";
+import { Skills } from "@/components/Skills";
+import { Contact } from "@/components/Contact";
+import { Footer, SocialLink } from "@/components/Footer";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+const DUMMY_PROJECTS: Project[] = [
+  {
+    id: "1",
+    title: "ExamArchive",
+    description: "A free, community-driven platform for past exam papers and syllabi, currently in early access, starting with Haflong Government College. Built with Next.js + Appwrite, developed mobile-first with AI assistance.",
+    url: "https://www.examarchive.dev/",
+    repo_url: "https://github.com/Omdas11/examarchive-v3",
+    tags: ["Next.js", "Appwrite", "Tailwind"],
+    featured: true,
+  }
+];
+
+const DUMMY_LINKS: SocialLink[] = [
+  { id: "1", name: "GitHub", url: "https://github.com/Omdas11", icon: "github", category: "primary", visible: true, sort_order: 1 },
+  { id: "2", name: "LinkedIn", url: "https://www.linkedin.com/in/om-das-23451b283", icon: "linkedin", category: "primary", visible: true, sort_order: 2 },
+  { id: "3", name: "X/Twitter", url: "https://x.com/OmDas46705291", icon: "twitter", category: "primary", visible: true, sort_order: 3 },
+  { id: "4", name: "Email", url: "mailto:omdasg11@gmail.com", icon: "mail", category: "primary", visible: true, sort_order: 4 },
+  { id: "5", name: "Instagram", url: "https://www.instagram.com/no.stalgiaaa_", icon: "instagram", category: "secondary", visible: true, sort_order: 5 },
+  { id: "6", name: "WhatsApp", url: "https://wa.me/yournumber", icon: "whatsapp", category: "secondary", visible: true, sort_order: 6 },
+];
+
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function Home() {
+  let projects: Project[] = DUMMY_PROJECTS;
+  let links: SocialLink[] = DUMMY_LINKS;
+
+  try {
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      const supabase = await createClient();
+      
+      const { data: fetchedProjects, error: projectsError } = await supabase
+        .from('projects')
+        .select('*')
+        .order('sort_order', { ascending: true });
+        
+      if (!projectsError && fetchedProjects && fetchedProjects.length > 0) {
+        projects = fetchedProjects;
+      }
+
+      const { data: fetchedLinks, error: linksError } = await supabase
+        .from('links')
+        .select('*')
+        .order('sort_order', { ascending: true });
+
+      if (!linksError && fetchedLinks && fetchedLinks.length > 0) {
+        links = fetchedLinks;
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch data from Supabase, using fallbacks.", error);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-emerald-500/30">
+      {/* Decorative top gradient */}
+      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none"></div>
+
+      <Hero />
+      <About />
+      <Projects projects={projects} />
+      <Skills />
+      <Contact />
+      <Footer links={links} />
+    </main>
   );
 }

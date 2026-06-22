@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Om Das - Personal Portfolio
 
-## Getting Started
+A sleek, dark-mode first portfolio website built for Om Das using Next.js (App Router), Tailwind CSS v4, and Supabase.
 
-First, run the development server:
+## Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS v4
+- **Database / Auth**: Supabase (PostgreSQL)
+- **Icons**: Lucide React
+- **Deployment**: Vercel
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Setup & Deployment Guide
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project requires a Supabase backend to store links, projects, and messages.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Supabase Project Setup
+1. Go to [Supabase](https://supabase.com/) and create a new project.
+2. Once the project is ready, go to **Project Settings -> API** to get your `Project URL` and `anon public` key.
+3. Go to the **SQL Editor** in your Supabase dashboard and run the entire SQL script located in `supabase/migrations/20240101000000_init_schema.sql`. This will create the required tables (`links`, `projects`, `messages`) and set up Row Level Security (RLS) policies.
+4. Go to **Authentication -> Providers** and make sure Email/Password is enabled. 
+5. Go to **Authentication -> Users** and manually create your Admin user (e.g., `omdasg11@gmail.com`). This is the *only* account that will be able to log into the `/admin` dashboard.
 
-## Learn More
+### 2. Local Environment Setup
+1. Clone this repository: `git clone https://github.com/Omdas11/om-portfolio.git`
+2. Install dependencies: `npm install`
+3. Copy `.env.example` to `.env.local` and add your Supabase keys:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+4. Start the development server: `npm run dev`
+5. Open [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Vercel Deployment
+1. Go to [Vercel](https://vercel.com/) and create a new project from your GitHub repository.
+2. In the Vercel project settings, go to **Environment Variables** and add the exact same variables from your `.env.local` file (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+3. Click **Deploy**. Vercel will automatically build the Next.js app and serve it.
+4. Make sure to add `resume.pdf` to your `public` directory before your final deploy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🗄️ Database Schema & RLS Policies
 
-## Deploy on Vercel
+The database is structured to be secure by default. Public users can only read `links` and `projects`, and can only *insert* `messages` via the contact form.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **`links`**: Stores footer/social links. Admin can CRUD, Public can read where `visible=true`.
+- **`projects`**: Stores portfolio projects. Admin can CRUD, Public can read all.
+- **`messages`**: Stores contact form submissions. Admin can read/delete, Public can *only* insert.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `supabase/migrations/` for exact SQL definitions.
+
+---
+
+## 🔑 Admin Dashboard
+Navigate to `/admin/login` and sign in with the user you created in the Supabase dashboard. Once signed in, you can view messages directly from the UI. (Note: The admin dashboard provides a read-only view in this template version, but the backend is fully secured to allow CRUD from an authenticated client).
